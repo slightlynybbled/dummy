@@ -1,10 +1,28 @@
-import flask
+import time
+import socket
 
-app = flask.Flask(__name__)
+host = '127.0.0.1'
+port = 8888
 
-@app.route('/')
-def index():
-    return '', 200
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.bind((host, port))
+sock.settimeout(0.1)
+sock.listen()
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='5000')
+count = 0
+while True:
+    try:
+        conn, addr = sock.accept()
+        data = conn.recv(256)
+        print('received: ', data)
+        conn.sendall(b'OK')
+        conn.close()
+    except socket.timeout:
+        pass
+
+    print(count)
+    count += 1
+    with open('dummy.txt', 'w') as f:
+        f.write('count: {}'.format(count))
+
+    time.sleep(1.0)
