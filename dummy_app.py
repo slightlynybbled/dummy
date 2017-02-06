@@ -1,10 +1,10 @@
-import time
+import flask
 
+app = flask.Flask(__name__)
 
-count = 0
-while True:
-    count += 1
-    with open('dummy.txt', 'w') as f:
-        f.write('count: {}'.format(count))
+@app.route('/')
+def index():
+    return '', 200
 
-    time.sleep(1.0)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port='80')
